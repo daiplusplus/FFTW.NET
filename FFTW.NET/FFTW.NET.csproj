@@ -50,6 +50,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="libfftw3-3-x64.dll" />
+	  <None Remove="libfftw3-3-x86.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="libfftw3-3-x64.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="libfftw3-3-x86.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="FftwInterop.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>FftwInterop.g.cs</LastGenOutput>
