@@ -1,4 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- See https://learn.microsoft.com/en-us/visualstudio/modeling/code-generation-in-a-build-process?view=vs-2022&tabs=csharp -->
+	<!--VS2022:<Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v17.0\TextTemplating\Microsoft.TextTemplating.targets" />-->
+	<!--VS2019:--><Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v16.0\TextTemplating\Microsoft.TextTemplating.targets" />
+
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -23,8 +28,27 @@
 
 2.0.0:
 	- Changed to target .NET 5.
+	- T4 (FftInterop.tt) now runs during MSBuild instead of only within VS.
+	- Added a pregenerated T4 output: `FftwInterop.Win32.cs` - this .cs file is excluded from compilation with `#if HERES_ONE_I_MADE_EARLIER`, so you can still build this project if T4 isn't working for you.
 	</PackageReleaseNotes>
 	</PropertyGroup>
+
+	<PropertyGroup Label="T4">
+		<TransformOnBuild>true</TransformOnBuild>
+		<TransformOutOfDateOnly>true</TransformOutOfDateOnly>
+		<!--
+		To run T4 from the command-line, run this:
+
+		cd "C:\git\clones\FFTW.NET"
+		msbuild "FFTW.NET\FFTW.NET.csproj" /t:TransformAll
+		-->
+
+		<!-- If you are unable to run T4 (e.g. you don't have VS's Build Environment) you can use a pre-generated `FftwInterop.cs` file, but you need to define the `HERES_ONE_I_MADE_EARLIER` symbol, do that by uncommenting below: -->
+		<!--
+		<DefineConstants>$(DefineConstants);HERES_ONE_I_MADE_EARLIER</DefineConstants>
+		-->
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Update="FftwInterop.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
